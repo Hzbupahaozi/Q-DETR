@@ -61,6 +61,7 @@ def round_pass(x):
 
 
 class Conv2dLSQ(_Conv2dQ):
+    # kernel_wise=2
     def __init__(self, in_channels, out_channels, kernel_size, stride=1,
                  padding=0, dilation=1, groups=1, bias=True, nbits_w=4, mode=Qmodes.kernel_wise, **kwargs):
         super(Conv2dLSQ, self).__init__(

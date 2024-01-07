@@ -37,7 +37,7 @@ def get_args_parser():
     parser.add_argument('--frozen_weights', type=str, default=None,
                         help="Path to the pretrained model. If set, only the mask head will be trained")
     # * Backbone
-    parser.add_argument('--quant', action='store_true', help="")
+    parser.add_argument('--quant', default='False', action='store_true', help="")
     parser.add_argument('--backbone_quant', action='store_true', help="")
 
     parser.add_argument('--backbone', default='resnet50', type=str,
@@ -132,7 +132,7 @@ def main(args):
         model, criterion, postprocessors = build_quant_model(args)
     else:
         model, criterion, postprocessors = build_model(args)
-    print(model)
+    # print(model)
     model.to(device)
 
     model_without_ddp = model

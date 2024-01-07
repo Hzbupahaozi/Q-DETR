@@ -18,7 +18,9 @@ from .quant_attention_layer import *
 from .lsq_plus import *
 from ._quan_base_plus import *
 
+
 class Transformer(nn.Module):
+    # 多了参数n_bit = 4, dynamic_scale = 'type1', smooth = 8
 
     def __init__(self, d_model=512, nhead=8, num_encoder_layers=6, n_bit=3,
                  num_decoder_layers=6, dim_feedforward=2048, dropout=0.1,
@@ -26,7 +28,7 @@ class Transformer(nn.Module):
                  return_intermediate_dec=False, smooth=8, dynamic_scale=True):
         super().__init__()
 
-        encoder_layer = TransformerEncoderLayer(d_model, nhead, n_bit, dim_feedforward, 
+        encoder_layer = TransformerEncoderLayer(d_model, nhead, n_bit, dim_feedforward,
                                                 dropout, activation, normalize_before)
         encoder_norm = nn.LayerNorm(d_model) if normalize_before else None
         self.encoder = TransformerEncoder(encoder_layer, num_encoder_layers, encoder_norm)
@@ -34,7 +36,7 @@ class Transformer(nn.Module):
         decoder_layers = []
         for layer_index in range(num_decoder_layers):
             decoder_layer = TransformerDecoderLayer(dynamic_scale, smooth, layer_index,
-                                                    d_model, nhead,  n_bit, dim_feedforward, dropout,
+                                                    d_model, nhead, n_bit, dim_feedforward, dropout,
                                                     activation, normalize_before)
             decoder_layers.append(decoder_layer)
         decoder_norm = nn.LayerNorm(d_model)
@@ -56,6 +58,13 @@ class Transformer(nn.Module):
             if p.dim() > 1:
                 nn.init.xavier_uniform_(p)
 
+    """
+    传进来的四个参数：
+    src={Tensor:[2,256,20,31]}
+    mask{Tensor:[2,20,31]}
+    query_embed:{Parameter:[100,512]}
+    pos_embed:{Tensor:(2,256,20,31)}
+    """
     def forward(self, src, mask, query_embed, pos_embed, h_w):
         # flatten NxCxHxW to HWxNxC
         bs, c, h, w = src.shape
@@ -215,7 +224,7 @@ class TransformerDecoderLayer(nn.Module):
                  d_model, nhead, n_bit=4, dim_feedforward=2048, dropout=0.1,
                  activation="relu", normalize_before=False):
         super().__init__()
-        self.self_attn = QuantMultiheadAttention(d_model, nhead,  n_bit=n_bit, dropout=dropout, encoder=True)
+        self.self_attn = QuantMultiheadAttention(d_model, nhead, n_bit=n_bit, dropout=dropout, encoder=True)
         self.multihead_attn = GaussianMultiheadAttention(d_model, nhead, n_bit=n_bit, dropout=dropout, encoder=True)
         # Implementation of Feedforward model
         self.linear1 = LinearLSQ(d_model, dim_feedforward, nbits_w=n_bit)
@@ -383,7 +392,7 @@ def build_transformer(args):
         d_model=args.hidden_dim,
         dropout=args.dropout,
         nhead=args.nheads,
-        n_bit = args.n_bit,
+        n_bit=args.n_bit,
         dim_feedforward=args.dim_feedforward,
         num_encoder_layers=args.enc_layers,
         num_decoder_layers=args.dec_layers,

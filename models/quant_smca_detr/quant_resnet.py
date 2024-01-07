@@ -310,7 +310,7 @@ def resnet34(pretrained=False, progress=True, **kwargs):
 
 
 def resnet50(pretrained=False, progress=True, n_bit=4, **kwargs):
-    #print(n_bit)
+    # print(n_bit)
     r"""ResNet-50 model from
     `"Deep Residual Learning for Image Recognition" <https://arxiv.org/pdf/1512.03385.pdf>`_
 
