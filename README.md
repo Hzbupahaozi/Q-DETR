@@ -1,4 +1,12 @@
 # Q-DETR: An Efficient Low-Bit Quantized Detection Transformer
+在源码中根据论文添加了蒸馏部分的代码，如有疑问，欢迎交流！
+
+# Train
+PS: batch_size must be 2
+```
+python main.py --batch_size 2 --n_bit=4 --quant --finetune ./ckpt_4_bit_smca_detr_coco.pth \
+--finetune_t ./ckpt_4_bit_smca_detr_coco.pth --num_queries 300 --coco_path your coco_path
+```
 
 # Usage
 First, clone the repository locally:
@@ -64,4 +72,4 @@ If you find this repository useful, please consider citing our work:
 ```
 
 ## Acknowledege
-The project are borrowed heavily from SMCA-DETR.
+The project are borrowed heavily from Q-DETR.
