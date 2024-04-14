@@ -1,5 +1,5 @@
 # Q-DETR: An Efficient Low-Bit Quantized Detection Transformer
-1、在源码中根据论文添加了蒸馏部分的代码，如有疑问，欢迎交流！
+1、在源码中根据论文添加了蒸馏部分的代码，如有疑问，欢迎交流！  \
 2、对LSQ+量化方法中使用STE方法对反向传播的梯度求导方法进行改进：使用quantnoise方法弥补量化损失
 
 # Train
